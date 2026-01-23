@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Resources collection - read access for all users, write access for admins only
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Pending resources collection - read/write access for admins only
+    match /pending_resources/{resourceId} {
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Admin users collection - read access for admins, create access for any authenticated user
+    match /admin_users/{userId} {
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+      allow create: if request.auth != null && 
+        request.auth.uid == userId && 
+        request.resource.data.role == 'admin';
+      allow update: if request.auth != null && 
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+      allow delete: if request.auth != null && 
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+    }
+  }
+}
