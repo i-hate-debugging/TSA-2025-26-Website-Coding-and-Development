@@ -1,4 +1,9 @@
-export default function Footer() {
+interface FooterProps {
+  activeSection?: string;
+  setActiveSection?: (section: string) => void;
+}
+
+export default function Footer({ activeSection = 'home', setActiveSection }: FooterProps) {
   return (
     <footer className="text-white" style={{backgroundColor: '#9B6B47'}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -15,10 +20,54 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-6" style={{color: '#FCF9EA'}}>Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#directory" className="text-gray-300 hover:text-white transition-colors flex items-center"><span className="mr-2">→</span> Resource Directory</a></li>
-              <li><a href="#spotlights" className="text-gray-300 hover:text-white transition-colors flex items-center"><span className="mr-2">→</span> Community Spotlights</a></li>
-              <li><a href="#submit" className="text-gray-300 hover:text-white transition-colors flex items-center"><span className="mr-2">→</span> Submit Resource</a></li>
-              <li><a href="/admin" className="text-gray-300 hover:text-white transition-colors flex items-center"><span className="mr-2">→</span> Admin Portal</a></li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('directory')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> Resource Directory
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('spotlights')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> Community Spotlights
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('submit')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> Submit Resource
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('admin')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> Admin Portal
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('copyright')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> Copyright Guidelines
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setActiveSection?.('worklog')}
+                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
+                >
+                  <span className="mr-2">→</span> TSA Worklog
+                </button>
+              </li>
             </ul>
           </div>
           

@@ -91,7 +91,7 @@ export default function ResourceSubmissionForm() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -103,7 +103,7 @@ export default function ResourceSubmissionForm() {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               >
                 {categories.map(category => (
                   <option key={category} value={category}>{category}</option>
@@ -121,7 +121,7 @@ export default function ResourceSubmissionForm() {
                 onChange={handleChange}
                 required
                 rows={4}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function ResourceSubmissionForm() {
                 name="websiteUrl"
                 value={formData.websiteUrl}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -147,7 +147,7 @@ export default function ResourceSubmissionForm() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -160,7 +160,7 @@ export default function ResourceSubmissionForm() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -173,7 +173,7 @@ export default function ResourceSubmissionForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -187,7 +187,7 @@ export default function ResourceSubmissionForm() {
                 value={formData.hours}
                 onChange={handleChange}
                 placeholder="e.g., Mon-Fri 9AM-5PM"
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -201,7 +201,7 @@ export default function ResourceSubmissionForm() {
                 value={formData.tags}
                 onChange={handleChange}
                 placeholder="e.g., free, families, spanish"
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -214,7 +214,7 @@ export default function ResourceSubmissionForm() {
                 name="submitterName"
                 value={formData.submitterName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
 
@@ -227,7 +227,7 @@ export default function ResourceSubmissionForm() {
                 name="submitterEmail"
                 value={formData.submitterEmail}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1', color: '#333'}}
               />
             </div>
           </div>

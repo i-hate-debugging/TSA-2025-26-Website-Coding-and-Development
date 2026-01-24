@@ -82,7 +82,8 @@ export default function ResourceDirectory() {
               placeholder="🔍 Search resources by name, description, or tags..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 px-6 py-4 text-lg border rounded-xl focus:ring-2 focus:border-transparent transition-all" style={{borderColor: '#EBD9D1'}}
+              className="flex-1 px-6 py-4 text-lg border rounded-xl focus:ring-2 focus:border-transparent transition-all" 
+              style={{borderColor: '#EBD9D1', color: '#333'}}
             />
           </div>
           
