@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import ResourceDirectory from '@/components/ResourceDirectory';
 import CommunitySpotlights from '@/components/CommunitySpotlights';
@@ -11,6 +13,57 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('home');
+  const searchParams = useSearchParams();
+  const requestedSection = searchParams.get('section');
+  const homeActions = [
+    {
+      title: 'Explore the Directory',
+      description: 'Browse community resources by category or search keywords.',
+      action: () => setActiveSection('directory'),
+      buttonLabel: 'Open Directory',
+      accent: '#BADFDB'
+    },
+    {
+      title: 'Meet the Spotlights',
+      description: 'Discover featured programs that help newcomers thrive.',
+      action: () => setActiveSection('spotlights'),
+      buttonLabel: 'View Spotlights',
+      accent: '#F5CBCB'
+    },
+    {
+      title: 'Submit a Resource',
+      description: 'Share a local organization or service to help others.',
+      action: () => setActiveSection('submit'),
+      buttonLabel: 'Submit Resource',
+      accent: '#9ECAD6'
+    },
+    {
+      title: 'Admin Portal',
+      description: 'Review submissions and manage the resource list.',
+      action: () => setActiveSection('admin'),
+      buttonLabel: 'Go to Admin',
+      accent: '#EBD9D1'
+    }
+  ];
+
+  useEffect(() => {
+    if (!requestedSection) {
+      return;
+    }
+
+    const allowedSections = new Set([
+      'home',
+      'directory',
+      'spotlights',
+      'submit',
+      'admin',
+      'admin-dashboard'
+    ]);
+
+    if (allowedSections.has(requestedSection)) {
+      setActiveSection(requestedSection);
+    }
+  }, [requestedSection]);
 
   const renderContent = () => {
     switch(activeSection) {
@@ -31,114 +84,34 @@ export default function Home() {
         );
       case 'admin-dashboard':
         return <AdminDashboard onSignOut={() => setActiveSection('admin')} />;
-      case 'copyright':
-        return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="flex items-center space-x-4 mb-8">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: '#B87C4C'}}>
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold" style={{color: '#B87C4C'}}>Student Copyright Checklist</h1>
-                  <p className="text-sm" style={{color: '#748DAE'}}>Essential guide for copyright compliance</p>
-                </div>
-              </div>
-              
-              <div className="aspect-video mb-8">
-                <iframe
-                  src="/StudentCopyrightChecklist.pdf"
-                  className="w-full h-full rounded-lg"
-                  title="Student Copyright Checklist"
-                />
-              </div>
-
-              <div className="text-center">
-                <a
-                  href="/StudentCopyrightChecklist.pdf"
-                  download
-                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
-                  style={{backgroundColor: '#FFA4A4', color: 'white'}}
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  <span>Download Student Copyright Checklist</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        );
-      case 'worklog':
-        return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="flex items-center space-x-4 mb-8">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: '#B87C4C'}}>
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold" style={{color: '#B87C4C'}}>TSA Worklog</h1>
-                  <p className="text-sm" style={{color: '#748DAE'}}>Project timeline and progress tracking</p>
-                </div>
-              </div>
-              
-              <div className="aspect-video mb-8">
-                <iframe
-                  src="/TSA-worklog.pdf"
-                  className="w-full h-full rounded-lg"
-                  title="TSA Worklog"
-                />
-              </div>
-
-              <div className="text-center">
-                <a
-                  href="/TSA-worklog.pdf"
-                  download
-                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
-                  style={{backgroundColor: '#FFA4A4', color: 'white'}}
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  <span>Download TSA Worklog</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        );
       default:
         return (
           <>
-            <section className="relative py-32 overflow-hidden" style={{backgroundColor: '#F7F4EA'}}>
+            <section className="relative py-24 overflow-hidden" style={{backgroundColor: '#F7F4EA'}}>
               <div className="absolute inset-0 bg-white opacity-30"></div>
-              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div className="max-w-4xl mx-auto">
-                  <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight" style={{color: '#B87C4C'}}>
-                    Welcome Home
+              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto text-center">
+                  <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{color: '#B87C4C'}}>
+                    Welcome to The Newcomer's Compass
                   </h1>
-                  <p className="text-xl md:text-2xl mb-12 leading-relaxed" style={{color: '#748DAE'}}>
-                    Your friendly guide to thriving in our community. Discover resources, 
-                    connect with neighbors, and make this place truly yours.
+                  <p className="text-xl md:text-2xl mb-10 leading-relaxed" style={{color: '#748DAE'}}>
+                    A friendly starting point for new neighbors. Learn the essentials, find trusted services,
+                    and connect with people who can help you feel at home.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-6 justify-center">
                     <button
                       onClick={() => setActiveSection('directory')}
-                      className="px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl" 
+                      className="px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl"
                       style={{backgroundColor: '#BADFDB', color: '#748DAE'}}
                     >
-                      Explore Resources
+                      Start with Resources
                     </button>
                     <button
-                      onClick={() => setActiveSection('spotlights')}
-                      className="px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105" 
+                      onClick={() => setActiveSection('submit')}
+                      className="px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105"
                       style={{backgroundColor: 'transparent', border: '3px solid #A8BBA3', color: '#A8BBA3'}}
                     >
-                      Community Highlights
+                      Share a Resource
                     </button>
                   </div>
                 </div>
@@ -146,8 +119,98 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 h-20" style={{background: 'linear-gradient(to top, #FCF9EA, transparent)'}}></div>
             </section>
 
-            <CommunitySpotlights />
-            <ResourceDirectory />
+            <section className="py-16" style={{backgroundColor: '#FCF9EA'}}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{color: '#B87C4C'}}>
+                    Get Started in Three Steps
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Use the Compass to discover what you need today, connect with community supports,
+                    and contribute ideas that help future newcomers.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {['Discover', 'Connect', 'Contribute'].map((step, index) => (
+                    <div key={step} className="bg-white rounded-2xl shadow-lg p-8 border" style={{borderColor: '#EBD9D1'}}>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg mb-4" style={{backgroundColor: '#B87C4C'}}>
+                        {index + 1}
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{color: '#748DAE'}}>
+                        {step}
+                      </h3>
+                      <p className="text-gray-600">
+                        {step === 'Discover' && 'Search for services by category, location, or need.'}
+                        {step === 'Connect' && 'Learn about welcoming programs and local support groups.'}
+                        {step === 'Contribute' && 'Suggest resources so the directory stays current.'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="py-16" style={{backgroundColor: '#F7F4EA'}}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{color: '#B87C4C'}}>
+                    What You Can Do
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Choose a path that fits your needs, whether you are looking for help or offering it.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {homeActions.map((action) => (
+                    <div key={action.title} className="bg-white rounded-2xl shadow-lg p-8 border" style={{borderColor: '#EBD9D1'}}>
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{backgroundColor: action.accent}}>
+                        <span className="text-2xl">★</span>
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3" style={{color: '#748DAE'}}>
+                        {action.title}
+                      </h3>
+                      <p className="text-gray-600 mb-6">{action.description}</p>
+                      <button
+                        onClick={action.action}
+                        className="px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
+                        style={{backgroundColor: '#B87C4C', color: 'white'}}
+                      >
+                        {action.buttonLabel}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="py-16" style={{backgroundColor: '#FCF9EA'}}>
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="bg-white rounded-2xl shadow-xl p-8 border text-center" style={{borderColor: '#EBD9D1'}}>
+                  <h2 className="text-3xl font-bold mb-4" style={{color: '#B87C4C'}}>
+                    TSA Documentation Hub
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Find required competition documents, sources, and permissions in one place.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                      href="/reference"
+                      className="px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
+                      style={{backgroundColor: '#BADFDB', color: '#748DAE'}}
+                    >
+                      Reference Page
+                    </Link>
+                    <Link
+                      href="/worklog"
+                      className="px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg"
+                      style={{backgroundColor: '#FFA4A4', color: 'white'}}
+                    >
+                      View Work Log
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </section>
           </>
         );
     }

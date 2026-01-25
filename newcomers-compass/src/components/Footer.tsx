@@ -1,9 +1,51 @@
+import Link from 'next/link';
+
 interface FooterProps {
   activeSection?: string;
   setActiveSection?: (section: string) => void;
 }
 
 export default function Footer({ activeSection = 'home', setActiveSection }: FooterProps) {
+  const hasSectionNav = typeof setActiveSection === 'function';
+  const quickLinks = [
+    { id: 'directory', label: 'Resource Directory', section: 'directory', href: '/?section=directory' },
+    { id: 'spotlights', label: 'Community Spotlights', section: 'spotlights', href: '/?section=spotlights' },
+    { id: 'submit', label: 'Submit Resource', section: 'submit', href: '/?section=submit' },
+    { id: 'admin', label: 'Admin Portal', section: 'admin', href: '/?section=admin' },
+    { id: 'reference', label: 'Reference Page', href: '/reference' },
+    { id: 'worklog', label: 'Work Log', href: '/worklog' }
+  ] as const;
+
+  const renderQuickLink = (item: typeof quickLinks[number]) => {
+    const className = 'text-gray-300 hover:text-white transition-colors flex items-center w-full text-left';
+    const isActive = activeSection === item.id;
+    const style = isActive ? { color: '#FCF9EA' } : undefined;
+
+    if (hasSectionNav && item.section) {
+      return (
+        <button
+          key={item.id}
+          onClick={() => setActiveSection?.(item.section)}
+          className={className}
+          style={style}
+        >
+          <span className="mr-2">→</span> {item.label}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        key={item.id}
+        href={item.href}
+        className={className}
+        style={style}
+      >
+        <span className="mr-2">→</span> {item.label}
+      </Link>
+    );
+  };
+
   return (
     <footer className="text-white" style={{backgroundColor: '#9B6B47'}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -20,54 +62,9 @@ export default function Footer({ activeSection = 'home', setActiveSection }: Foo
           <div>
             <h4 className="text-lg font-semibold mb-6" style={{color: '#FCF9EA'}}>Quick Links</h4>
             <ul className="space-y-3">
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('directory')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> Resource Directory
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('spotlights')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> Community Spotlights
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('submit')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> Submit Resource
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('admin')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> Admin Portal
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('copyright')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> Copyright Guidelines
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setActiveSection?.('worklog')}
-                  className="text-gray-300 hover:text-white transition-colors flex items-center w-full text-left"
-                >
-                  <span className="mr-2">→</span> TSA Worklog
-                </button>
-              </li>
+              {quickLinks.map((item) => (
+                <li key={item.id}>{renderQuickLink(item)}</li>
+              ))}
             </ul>
           </div>
           

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface HeaderProps {
@@ -9,70 +10,83 @@ interface HeaderProps {
 
 export default function Header({ activeSection = 'home', setActiveSection }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hasSectionNav = typeof setActiveSection === 'function';
+
+  const navItems = [
+    { id: 'directory', label: 'Directory', section: 'directory', href: '/?section=directory' },
+    { id: 'spotlights', label: 'Spotlights', section: 'spotlights', href: '/?section=spotlights' },
+    { id: 'submit', label: 'Submit Resource', section: 'submit', href: '/?section=submit' },
+    { id: 'admin', label: 'Admin', section: 'admin', href: '/?section=admin' },
+    { id: 'reference', label: 'Reference Page', href: '/reference' },
+    { id: 'home', label: 'Get Help Now', section: 'home', href: '/', variant: 'cta' }
+  ] as const;
+
+  const renderNavItem = (item: typeof navItems[number], isMobile = false) => {
+    const isActive = activeSection === item.id;
+    const isCta = item.variant === 'cta';
+    const className = isCta
+      ? `px-6 ${isMobile ? 'py-3 w-full' : 'py-2'} rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg${isMobile ? ' text-center' : ''}`
+      : `font-medium transition-colors${isMobile ? ' py-2 text-left' : ''}`;
+    const style = isCta
+      ? { backgroundColor: '#FFA4A4', color: 'white' }
+      : { color: isActive ? '#B87C4C' : '#748DAE' };
+
+    if (hasSectionNav && item.section) {
+      return (
+        <button
+          key={item.id}
+          onClick={() => {
+            setActiveSection?.(item.section);
+            if (isMobile) {
+              setIsMenuOpen(false);
+            }
+          }}
+          className={className}
+          style={style}
+        >
+          {item.label}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        key={item.id}
+        href={item.href}
+        className={className}
+        style={style}
+        onClick={() => {
+          if (isMobile) {
+            setIsMenuOpen(false);
+          }
+        }}
+      >
+        {item.label}
+      </Link>
+    );
+  };
 
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <button 
-              onClick={() => setActiveSection?.('home')}
-              className="flex items-center"
-            >
-              <h1 className="text-2xl font-bold" style={{color: '#B87C4C'}}>The Newcomer's Compass</h1>
-            </button>
+            {hasSectionNav ? (
+              <button
+                onClick={() => setActiveSection?.('home')}
+                className="flex items-center"
+              >
+                <h1 className="text-2xl font-bold" style={{color: '#B87C4C'}}>The Newcomer's Compass</h1>
+              </button>
+            ) : (
+              <Link href="/" className="flex items-center">
+                <h1 className="text-2xl font-bold" style={{color: '#B87C4C'}}>The Newcomer's Compass</h1>
+              </Link>
+            )}
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
-            <button 
-              onClick={() => setActiveSection?.('directory')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'directory' ? '#B87C4C' : '#748DAE'}}
-            >
-              Directory
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('spotlights')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'spotlights' ? '#B87C4C' : '#748DAE'}}
-            >
-              Spotlights
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('submit')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'submit' ? '#B87C4C' : '#748DAE'}}
-            >
-              Submit Resource
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('admin')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'admin' ? '#B87C4C' : '#748DAE'}}
-            >
-              Admin
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('copyright')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'copyright' ? '#B87C4C' : '#748DAE'}}
-            >
-              Copyright
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('worklog')}
-              className="font-medium transition-colors" 
-              style={{color: activeSection === 'worklog' ? '#B87C4C' : '#748DAE'}}
-            >
-              Worklog
-            </button>
-            <button 
-              onClick={() => setActiveSection?.('home')}
-              className="px-6 py-2 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg" 
-              style={{backgroundColor: '#FFA4A4', color: 'white'}}
-            >
-              Get Help Now
-            </button>
+            {navItems.map((item) => renderNavItem(item))}
           </nav>
 
           <button className="font-medium transition-colors" style={{color: '#748DAE'}}
@@ -91,55 +105,7 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 bg-white/95 backdrop-blur-md">
             <div className="flex flex-col space-y-3">
-              <button 
-                onClick={() => { setActiveSection?.('directory'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'directory' ? '#B87C4C' : '#748DAE'}}
-              >
-                Directory
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('spotlights'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'spotlights' ? '#B87C4C' : '#748DAE'}}
-              >
-                Spotlights
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('submit'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'submit' ? '#B87C4C' : '#748DAE'}}
-              >
-                Submit Resource
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('admin'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'admin' ? '#B87C4C' : '#748DAE'}}
-              >
-                Admin
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('copyright'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'copyright' ? '#B87C4C' : '#748DAE'}}
-              >
-                Copyright
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('worklog'); setIsMenuOpen(false); }}
-                className="font-medium py-2 transition-colors text-left" 
-                style={{color: activeSection === 'worklog' ? '#B87C4C' : '#748DAE'}}
-              >
-                Worklog
-              </button>
-              <button 
-                onClick={() => { setActiveSection?.('home'); setIsMenuOpen(false); }}
-                className="px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg w-full" 
-                style={{backgroundColor: '#FFA4A4', color: 'white'}}
-              >
-                Get Help Now
-              </button>
+              {navItems.map((item) => renderNavItem(item, true))}
             </div>
           </div>
         )}
