@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import ResourceDirectory from '@/components/ResourceDirectory';
@@ -11,7 +11,7 @@ import AdminAuth from '@/components/AdminAuth';
 import AdminDashboard from '@/components/AdminDashboard';
 import Footer from '@/components/Footer';
 
-export default function Home() {
+function HomeContent() {
   const [activeSection, setActiveSection] = useState('home');
   const searchParams = useSearchParams();
   const requestedSection = searchParams.get('section');
@@ -226,5 +226,17 @@ export default function Home() {
       
       <Footer activeSection={activeSection} setActiveSection={setActiveSection} />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{backgroundColor: '#FCF9EA'}}>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{borderBottomColor: '#B87C4C'}}></div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

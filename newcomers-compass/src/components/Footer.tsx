@@ -8,12 +8,12 @@ interface FooterProps {
 export default function Footer({ activeSection = 'home', setActiveSection }: FooterProps) {
   const hasSectionNav = typeof setActiveSection === 'function';
   const quickLinks = [
-    { id: 'directory', label: 'Resource Directory', section: 'directory', href: '/?section=directory' },
-    { id: 'spotlights', label: 'Community Spotlights', section: 'spotlights', href: '/?section=spotlights' },
-    { id: 'submit', label: 'Submit Resource', section: 'submit', href: '/?section=submit' },
-    { id: 'admin', label: 'Admin Portal', section: 'admin', href: '/?section=admin' },
-    { id: 'reference', label: 'Reference Page', href: '/reference' },
-    { id: 'worklog', label: 'Work Log', href: '/worklog' }
+    { id: 'directory', label: 'Resource Directory', section: 'directory' as const, href: '/?section=directory' },
+    { id: 'spotlights', label: 'Community Spotlights', section: 'spotlights' as const, href: '/?section=spotlights' },
+    { id: 'submit', label: 'Submit Resource', section: 'submit' as const, href: '/?section=submit' },
+    { id: 'admin', label: 'Admin Portal', section: 'admin' as const, href: '/?section=admin' },
+    { id: 'copyright', label: 'Copyright Guidelines', section: 'copyright' as const, href: '/?section=copyright' },
+    { id: 'worklog', label: 'TSA Worklog', section: 'worklog' as const, href: '/?section=worklog' }
   ] as const;
 
   const renderQuickLink = (item: typeof quickLinks[number]) => {

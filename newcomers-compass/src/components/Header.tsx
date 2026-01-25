@@ -13,12 +13,13 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
   const hasSectionNav = typeof setActiveSection === 'function';
 
   const navItems = [
-    { id: 'directory', label: 'Directory', section: 'directory', href: '/?section=directory' },
-    { id: 'spotlights', label: 'Spotlights', section: 'spotlights', href: '/?section=spotlights' },
-    { id: 'submit', label: 'Submit Resource', section: 'submit', href: '/?section=submit' },
-    { id: 'admin', label: 'Admin', section: 'admin', href: '/?section=admin' },
-    { id: 'reference', label: 'Reference Page', href: '/reference' },
-    { id: 'home', label: 'Get Help Now', section: 'home', href: '/', variant: 'cta' }
+    { id: 'directory', label: 'Directory', section: 'directory' as const, href: '/?section=directory', variant: 'nav' as const },
+    { id: 'spotlights', label: 'Spotlights', section: 'spotlights' as const, href: '/?section=spotlights', variant: 'nav' as const },
+    { id: 'submit', label: 'Submit Resource', section: 'submit' as const, href: '/?section=submit', variant: 'nav' as const },
+    { id: 'admin', label: 'Admin', section: 'admin' as const, href: '/?section=admin', variant: 'nav' as const },
+    { id: 'copyright', label: 'Copyright', section: 'copyright' as const, href: '/?section=copyright', variant: 'nav' as const },
+    { id: 'worklog', label: 'Worklog', section: 'worklog' as const, href: '/?section=worklog', variant: 'nav' as const },
+    { id: 'home', label: 'Get Help Now', section: 'home' as const, href: '/', variant: 'cta' as const }
   ] as const;
 
   const renderNavItem = (item: typeof navItems[number], isMobile = false) => {
