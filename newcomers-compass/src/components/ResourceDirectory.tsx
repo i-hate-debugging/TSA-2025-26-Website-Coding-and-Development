@@ -5,7 +5,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Resource } from '@/types/resource';
 
-const categories = ['Social', 'Food', 'Education', 'Transit'];
+const categories = ['Social', 'Food', 'Education', 'Transit', 'Other'];
 
 export default function ResourceDirectory() {
   const [resources, setResources] = useState<Resource[]>([]);

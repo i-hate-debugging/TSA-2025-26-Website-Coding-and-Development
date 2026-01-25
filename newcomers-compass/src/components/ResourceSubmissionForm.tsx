@@ -7,7 +7,7 @@ import { db } from '@/lib/firebase';
 export default function ResourceSubmissionForm() {
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Essential Services',
+    category: 'Education',
     description: '',
     websiteUrl: '',
     address: '',
@@ -21,7 +21,7 @@ export default function ResourceSubmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
 
-  const categories = ['Essential Services', 'Social & Community', 'Education/ESL', 'Transportation'];
+  const categories = ['Education', 'Food', 'Social', 'Transit', 'Other'];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -48,7 +48,7 @@ export default function ResourceSubmissionForm() {
       setSubmitMessage('Thank you for your submission! It will be reviewed shortly.');
       setFormData({
         name: '',
-        category: 'Essential Services',
+        category: 'Education',
         description: '',
         websiteUrl: '',
         address: '',

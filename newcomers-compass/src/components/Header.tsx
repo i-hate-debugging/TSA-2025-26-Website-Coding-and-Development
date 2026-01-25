@@ -17,8 +17,7 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
     { id: 'spotlights', label: 'Spotlights', section: 'spotlights' as const, href: '/?section=spotlights', variant: 'nav' as const },
     { id: 'submit', label: 'Submit Resource', section: 'submit' as const, href: '/?section=submit', variant: 'nav' as const },
     { id: 'admin', label: 'Admin', section: 'admin' as const, href: '/?section=admin', variant: 'nav' as const },
-    { id: 'copyright', label: 'Copyright', section: 'copyright' as const, href: '/?section=copyright', variant: 'nav' as const },
-    { id: 'worklog', label: 'Worklog', section: 'worklog' as const, href: '/?section=worklog', variant: 'nav' as const },
+    { id: 'reference', label: 'Reference', href: '/reference', variant: 'nav' as const },
     { id: 'home', label: 'Get Help Now', section: 'home' as const, href: '/', variant: 'cta' as const }
   ] as const;
 
@@ -32,7 +31,7 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
       ? { backgroundColor: '#FFA4A4', color: 'white' }
       : { color: isActive ? '#B87C4C' : '#748DAE' };
 
-    if (hasSectionNav && item.section) {
+    if (hasSectionNav && 'section' in item && item.section) {
       return (
         <button
           key={item.id}

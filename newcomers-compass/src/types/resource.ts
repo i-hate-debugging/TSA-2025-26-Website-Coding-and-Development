@@ -1,7 +1,7 @@
 export interface Resource {
   id: string;
   title: string;
-  category: 'Social' | 'Food' | 'Education' | 'Transit';
+  category: 'Social' | 'Food' | 'Education' | 'Transit' | 'Other';
   description: string;
   website: string;
   imageUrl?: string;
