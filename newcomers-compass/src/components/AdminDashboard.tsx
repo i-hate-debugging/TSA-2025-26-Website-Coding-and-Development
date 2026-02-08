@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { collection, query, getDocs, doc, deleteDoc, updateDoc, addDoc } from 'firebase/firestore';
+import { collection, query, getDocs, doc, deleteDoc, updateDoc, addDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Resource, PendingResource } from '@/types/resource';
 
@@ -44,11 +44,21 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
     try {
       const q = query(collection(db, 'resources'));
       const querySnapshot = await getDocs(q);
-      const resourcesData: Resource[] = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Resource[];
+      const resourcesData: Resource[] = querySnapshot.docs.map(doc => {
+        const data = doc.data() as any;
+        return {
+          id: data.id, // Use YOUR custom numeric ID from data
+          firestoreId: doc.id, // Keep Firebase ID for reference
+          ...data
+        };
+      });
       setResources(resourcesData);
+      console.log('Fetched resources:', resourcesData.map(r => ({ 
+        customId: r.id,           // Your numeric ID
+        firebaseId: (r as any).firestoreId, // Firebase ID
+        customIdType: typeof r.id,
+        title: r.title 
+      })));
     } catch (error) {
       console.error('Error fetching resources:', error);
     }
@@ -70,11 +80,16 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (resource: Resource) => {
     if (confirm('Are you sure you want to delete this resource?')) {
       try {
-        await deleteDoc(doc(db, 'resources', id));
-        fetchResources();
+        const firebaseId = (resource as any).firestoreId;
+        if (firebaseId) {
+          await deleteDoc(doc(db, 'resources', firebaseId));
+          fetchResources();
+        } else {
+          console.error('No Firebase document ID found for deletion');
+        }
       } catch (error) {
         console.error('Error deleting resource:', error);
       }
@@ -134,15 +149,61 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
       website: resource.website,
       imageUrl: resource.imageUrl || ''
     });
+    
+    // Scroll to the form after a short delay to ensure state update
+    setTimeout(() => {
+      const formElement = document.getElementById('resource-form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const handleSave = async () => {
     try {
-      if (editingResource) {
-        const docRef = doc(db, 'resources', editingResource.id);
-        await updateDoc(docRef, formData);
+      console.log('Saving resource:', { editingResource, hasId: editingResource?.id });
+      console.log('Current user:', user);
+      console.log('User authenticated:', !!user);
+      console.log('All resources in state:', resources.map(r => ({ 
+        customId: r.id, 
+        firebaseId: (r as any).firestoreId,
+        title: r.title 
+      })));
+      
+      if (editingResource && editingResource.id) {
+        console.log('Attempting to update document with custom ID:', editingResource.id, 'Type:', typeof editingResource.id);
+        
+        // Use Firebase document ID for Firestore operations
+        const firebaseId = (editingResource as any).firestoreId;
+        console.log('Using Firebase document ID:', firebaseId);
+        
+        if (firebaseId) {
+          const docRef = doc(db, 'resources', firebaseId);
+          
+          // First verify document exists
+          try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              console.log('Document exists, updating...');
+              await updateDoc(docRef, formData);
+              console.log('Updated document:', firebaseId);
+            } else {
+              console.error('Firebase document does not exist!');
+            }
+          } catch (docError) {
+            console.error('Error checking document existence:', docError);
+          }
+        } else {
+          console.error('No Firebase document ID found!');
+        }
       } else {
-        await addDoc(collection(db, 'resources'), formData);
+        console.log('Creating new document...');
+        const newDoc = await addDoc(collection(db, 'resources'), formData);
+        console.log('Created new document:', newDoc.id);
+        
+        // Update the newly created resource with its ID
+        await updateDoc(newDoc, { id: newDoc.id });
+        console.log('Updated new document with ID:', newDoc.id);
       }
       setEditingResource(null);
       setFormData({
@@ -155,6 +216,7 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
       fetchResources();
     } catch (error) {
       console.error('Error saving resource:', error);
+      console.error('Error details:', (error as any)?.code, (error as any)?.message);
     }
   };
 
@@ -352,7 +414,7 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
         </div>
 
         {/* Add/Edit Resource Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div id="resource-form" className="bg-white rounded-2xl shadow-xl p-8 mb-8">
           <h3 className="text-2xl font-bold mb-6" style={{color: '#B87C4C'}}>
             {editingResource ? 'Edit Resource' : 'Add New Resource'}
           </h3>
@@ -480,7 +542,7 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete(resource.id)}
+                          onClick={() => handleDelete(resource)}
                           className="px-3 py-1 rounded text-sm font-medium transition-colors"
                           style={{backgroundColor: '#FFA4A4', color: 'white'}}
                         >

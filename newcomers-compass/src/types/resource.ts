@@ -1,5 +1,5 @@
 export interface Resource {
-  id: string;
+  id: string | number;
   title: string;
   category: 'Social' | 'Food' | 'Education' | 'Transit' | 'Other';
   description: string;
