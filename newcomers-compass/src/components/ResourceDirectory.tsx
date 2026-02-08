@@ -125,7 +125,7 @@ export default function ResourceDirectory() {
               {resource.imageUrl && (
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={resource.imageUrl}
+                    src={resource.imageUrl.startsWith('data:') ? resource.imageUrl : `data:image/jpeg;base64,${resource.imageUrl}`}
                     alt={resource.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -161,16 +161,6 @@ export default function ResourceDirectory() {
                       <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </a>
-                )}
-                
-                {resource.imageUrl && (
-                  <div className="mt-4">
-                    <img
-                      src={resource.imageUrl}
-                      alt={resource.title}
-                      className="w-full h-32 object-cover rounded-lg"
-                    />
-                  </div>
                 )}
               </div>
             </div>
