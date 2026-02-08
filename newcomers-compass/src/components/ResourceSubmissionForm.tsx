@@ -99,7 +99,8 @@ export default function ResourceSubmissionForm() {
         hours: '',
         submitterName: '',
         submitterEmail: '',
-        tags: ''
+        tags: '',
+        imageUrl: ''
       });
     } catch (error) {
       console.error('Error submitting resource:', error);
