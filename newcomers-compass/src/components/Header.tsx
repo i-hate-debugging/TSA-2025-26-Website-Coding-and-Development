@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import AssistanceChat from '@/components/AssistanceChat';
 
 interface HeaderProps {
   activeSection?: string;
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export default function Header({ activeSection = 'home', setActiveSection }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const hasSectionNav = typeof setActiveSection === 'function';
 
   const navItems = [
@@ -18,18 +20,57 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
     { id: 'submit', label: 'Submit Resource', section: 'submit' as const, href: '/?section=submit', variant: 'nav' as const },
     { id: 'admin', label: 'Admin', section: 'admin' as const, href: '/?section=admin', variant: 'nav' as const },
     { id: 'reference', label: 'Reference', href: '/reference', variant: 'nav' as const },
-    { id: 'home', label: 'Get Help Now', section: 'home' as const, href: '/', variant: 'cta' as const }
+    { id: 'assistance', label: 'Get Assistance', href: '/assistance', variant: 'cta' as const }
   ] as const;
 
   const renderNavItem = (item: typeof navItems[number], isMobile = false) => {
     const isActive = activeSection === item.id;
     const isCta = item.variant === 'cta';
     const className = isCta
-      ? `px-6 ${isMobile ? 'py-3 w-full' : 'py-2'} rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg${isMobile ? ' text-center' : ''}`
+      ? `inline-flex items-center justify-center px-6 ${isMobile ? 'py-3 w-full' : 'py-2'} rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg${isMobile ? ' text-center' : ''}`
       : `font-medium transition-colors${isMobile ? ' py-2 text-left' : ''}`;
     const style = isCta
       ? { backgroundColor: '#FFA4A4', color: 'white' }
       : { color: isActive ? '#B87C4C' : '#748DAE' };
+
+    if (item.id === 'assistance') {
+      const assistanceLabel = isChatOpen ? 'X' : item.label;
+      const assistanceClassName = isCta
+        ? `${className} min-w-[150px]`
+        : className;
+
+      return (
+        <div key={item.id} className={isMobile ? 'w-full' : 'relative'}>
+          <button
+            onClick={() => {
+              setIsChatOpen((prev) => !prev);
+              if (isMobile) {
+                setIsMenuOpen(false);
+              }
+            }}
+            className={assistanceClassName}
+            style={style}
+            aria-expanded={isChatOpen}
+            aria-controls="assistance-chat"
+          >
+            <span className="leading-none">{assistanceLabel}</span>
+            {isChatOpen && <span className="sr-only">Close assistance chat</span>}
+          </button>
+
+          {!isMobile && isChatOpen && (
+            <div id="assistance-chat" className="absolute right-0 top-full mt-4 w-[380px] z-50">
+              <div className="relative">
+                <div
+                  className="absolute right-8 -top-2 h-4 w-4 rotate-45 border-l border-t"
+                  style={{backgroundColor: 'white', borderColor: '#EBD9D1'}}
+                />
+                <AssistanceChat />
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
 
     if (hasSectionNav && 'section' in item && item.section) {
       return (
@@ -67,7 +108,7 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
   };
 
   return (
-    <header className="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
+    <header className="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
@@ -112,6 +153,31 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
           </div>
         )}
       </div>
+
+      {isChatOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setIsChatOpen(false)}
+            aria-label="Close chat"
+          />
+          <div className="absolute bottom-0 left-0 right-0 px-4 pb-6">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsChatOpen(false)}
+                className="absolute right-4 top-4 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold shadow z-10"
+                style={{backgroundColor: '#FFA4A4', color: 'white'}}
+                aria-label="Close chat"
+              >
+                ×
+              </button>
+              <AssistanceChat />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
