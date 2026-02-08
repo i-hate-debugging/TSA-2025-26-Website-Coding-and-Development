@@ -23,6 +23,7 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
     website: '',
     imageUrl: ''
   });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -227,6 +228,49 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+    
+    try {
+      const base64 = await convertToBase64(file);
+      setFormData({ ...formData, imageUrl: base64 });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove data:image/...;base64, prefix and just keep the base64 part
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
   if (!user) {
@@ -465,14 +509,38 @@ export default function AdminDashboard({ onSignOut }: AdminDashboardProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{color: '#748DAE'}}>Image URL</label>
-              <input
-                type="url"
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
-                style={{borderColor: '#EBD9D1', color: '#333'}}
-              />
+              <label className="block text-sm font-semibold mb-2" style={{color: '#748DAE'}}>Image Upload</label>
+              <div className="space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
+                  style={{borderColor: '#EBD9D1', color: '#333'}}
+                  disabled={uploadingImage}
+                />
+                {uploadingImage && (
+                  <div className="text-sm" style={{color: '#748DAE'}}>Uploading image...</div>
+                )}
+                {formData.imageUrl && (
+                  <div className="mt-2">
+                    <img 
+                      src={`data:image/jpeg;base64,${formData.imageUrl}`}
+                      alt="Preview" 
+                      className="h-20 w-20 object-cover rounded-lg border"
+                      style={{borderColor: '#EBD9D1'}}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({...formData, imageUrl: ''})}
+                      className="ml-2 px-2 py-1 text-sm rounded"
+                      style={{backgroundColor: '#FFA4A4', color: 'white'}}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex gap-4 mt-6">
