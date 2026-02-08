@@ -89,7 +89,9 @@ export default function Header({ activeSection = 'home', setActiveSection }: Hea
             {navItems.map((item) => renderNavItem(item))}
           </nav>
 
-          <button className="font-medium transition-colors" style={{color: '#748DAE'}}
+          <button
+            className="font-medium transition-colors md:hidden"
+            style={{color: '#748DAE'}}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg className="h-6 w-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
